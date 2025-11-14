@@ -33,6 +33,8 @@
     import { useDeleteAnnotation } from '$lib/hooks/useDeleteAnnotation/useDeleteAnnotation';
     import { useRemoveTagFromSample } from '$lib/hooks/useRemoveTagFromSample/useRemoveTagFromSample';
     import { page } from '$app/state';
+    import { PaneGroup, Pane, PaneResizer } from 'paneforge';
+    import { GripVertical } from '@lucide/svelte';
 
     const {
         sampleId,
@@ -397,9 +399,9 @@
             <SampleDetailsBreadcrumb {dataset} {sampleIndex} />
         </div>
         <Separator class="mb-4 bg-border-hard" />
-        <div class="flex min-h-0 flex-1 gap-4">
-            <div class="flex-1">
-                <Card className="h-full">
+        <PaneGroup direction="horizontal" class="flex min-h-0 flex-1 gap-4">
+            <Pane defaultSize={70} minSize={40} class="flex">
+                <Card className="h-full flex-1">
                     <CardContent className="h-full">
                         <div class="h-full w-full overflow-hidden">
                             <div class="sample relative h-full w-full" bind:this={htmlContainer}>
@@ -495,8 +497,17 @@
                         </div>
                     </CardContent>
                 </Card>
-            </div>
-            <div class="relative w-[375px]">
+            </Pane>
+
+            <PaneResizer
+                class="relative flex w-1 cursor-col-resize items-center justify-center"
+            >
+                <div class="bg-brand z-10 flex h-7 min-w-5 items-center justify-center rounded">
+                    <GripVertical class="text-diffuse-foreground h-4 w-4" />
+                </div>
+            </PaneResizer>
+
+            <Pane defaultSize={30} minSize={20} class="flex">
                 {#if $sample.data}
                     <SampleDetailsSidePanel
                         bind:addAnnotationEnabled
@@ -511,8 +522,8 @@
                         onUpdate={refetch}
                     />
                 {/if}
-            </div>
-        </div>
+            </Pane>
+        </PaneGroup>
     </div>
 {:else}
     <Spinner />
